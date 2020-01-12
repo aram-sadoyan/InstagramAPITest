@@ -1,0 +1,9 @@
+<resources>
+	<string name="app_name">Instagram API Test</string>
+
+	<string name="facebook_app_id">705579043306365</string>
+
+	<string name="client_id">705579043306365</string>
+	<string name="callback_url">https://instagram.com/</string>
+	<string name="base_url">https://api.instagram.com/</string>
+</resources>
