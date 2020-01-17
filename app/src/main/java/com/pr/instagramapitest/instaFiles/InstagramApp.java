@@ -6,6 +6,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.pr.instagramapitest.api.AccessToken;
+import com.pr.instagramapitest.api.InstagramUser;
+import com.pr.instagramapitest.api.RestClient;
+
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
@@ -16,6 +20,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class InstagramApp {
 
@@ -43,7 +52,10 @@ public class InstagramApp {
 	public static String mCallbackUrl = "";
 	private static final String AUTH_URL = "https://api.instagram.com/oauth/authorize/";
 	private static final String TOKEN_URL = "https://api.instagram.com/oauth/access_token";
+	private static final String TOKEN_URL_NEW = "https://api.instagram.com/oauth/access_token";
+	private static final String TOKEN_URL_NEW2 = "https://api.instagram.com/";
 	private static final String API_URL = "https://api.instagram.com/v1";
+	private static final String ACCESS_TOKEN = "IGQVJXM19jS1NuV0dKMWM5M3ZA5THNVb1kwU0pySHFObGtXZAmpqSjVKOU9CUlZAsRzFBNjYxR2NSdTdKOWdZATHBxNmpkWno3dTZAHOUlvcHUyQW02MEtaNVhrU2pQajZAZAZAlVaUnhNSDVNSnhpNTREX0V3MHRqcjNFWHJyWkpF";
 
 	private static final String TAG = "InstagramAPI";
 
@@ -63,9 +75,9 @@ public class InstagramApp {
 				+ "?client_id="
 				+ clientId
 				+ "&redirect_uri="
-				+"&scope"
-				+"user_profile,user_media"
 				+ mCallbackUrl
+				+ "&scope="
+				+ "user_profile,user_media"
 				+ "&response_type=code";
 
 		InstagramDialog.OAuthDialogListener listener = new InstagramDialog.OAuthDialogListener() {
@@ -86,57 +98,85 @@ public class InstagramApp {
 	}
 
 	private void getAccessToken(final String code) {
-		mProgress.setMessage("Getting access token ...");
-		mProgress.show();
+		String newdCode = code.replace("#_", "");
 
-		new Thread() {
+		String mTokenUrl = TOKEN_URL_NEW + "?client_id=" + mClientId + "&client_secret="
+				+ mClientSecret + "&redirect_uri=" + mCallbackUrl
+				+ "&grant_type=authorization_code"+"&code=" +newdCode ;
+
+		RestClient.getInstance(mCtx).getWatchApiService().proceedLogin2(
+				mClientId,
+				mClientSecret,
+				"authorization_code",
+				mCallbackUrl,
+				newdCode
+		).enqueue(new Callback<AccessToken>() {
 			@Override
-			public void run() {
-				Log.i(TAG, "Getting access token");
-				int what = WHAT_FETCH_INFO;
-				try {
-					URL url = new URL(TOKEN_URL);
-					// URL url = new URL(mTokenUrl + "&code=" + code);
-					Log.i(TAG, "Opening Token URL " + url.toString());
-					HttpURLConnection urlConnection = (HttpURLConnection) url
-							.openConnection();
-					urlConnection.setRequestMethod("POST");
-					urlConnection.setDoInput(true);
-					urlConnection.setDoOutput(true);
-					// urlConnection.connect();
-					OutputStreamWriter writer = new OutputStreamWriter(
-							urlConnection.getOutputStream());
-					writer.write("client_id=" + mClientId + "&client_secret="
-							+ mClientSecret + "&grant_type=authorization_code"
-							+ "&redirect_uri=" + mCallbackUrl + "&code=" + code);
-					writer.flush();
-					String response = streamToString(urlConnection
-							.getInputStream());
-					Log.i(TAG, "response " + response);
-					JSONObject jsonObj = (JSONObject) new JSONTokener(response)
-							.nextValue();
-
-					mAccessToken = jsonObj.getString("access_token");
-					// Log.i(TAG, "Got access token: " + mAccessToken);
-
-					String id = jsonObj.getJSONObject("user").getString("id");
-					String user = jsonObj.getJSONObject("user").getString(
-							"username");
-					String name = jsonObj.getJSONObject("user").getString(
-							"full_name");
-					String userImage = jsonObj.getJSONObject("user").getString(
-							"profile_picture");
-					mSession.storeAccessToken(mAccessToken, id, user, name,
-							userImage);
-
-				} catch (Exception ex) {
-					what = WHAT_ERROR;
-					ex.printStackTrace();
-				}
-
-				mHandler.sendMessage(mHandler.obtainMessage(what, 1, 0));
+			public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+				Log.d("dwd", "Retrofit get Token Succes");
 			}
-		}.start();
+
+			@Override
+			public void onFailure(Call<AccessToken> call, Throwable t) {
+				Log.d("dwd", "Error Retrofit get Token");
+
+			}
+		});
+
+
+//		mProgress.setMessage("Getting access token ...");
+//		mProgress.show();
+//
+//		new Thread() {
+//			@Override
+//			public void run() {
+//				Log.i(TAG, "Getting access token");
+//				int what = WHAT_FETCH_INFO;
+//				try {
+//					URL url = new URL(TOKEN_URL);
+//					// URL url = new URL(mTokenUrl + "&code=" + code);
+//					Log.i(TAG, "Opening Token URL " + url.toString());
+//					HttpURLConnection urlConnection = (HttpURLConnection) url
+//							.openConnection();
+//					urlConnection.setRequestMethod("POST");
+//					urlConnection.setDoInput(true);
+//					urlConnection.setDoOutput(true);
+//					 urlConnection.connect();
+//					 String newCode = code.replace("#_","");
+//					 //code = code.replaceAll("#_ ","");
+//					OutputStreamWriter writer = new OutputStreamWriter(
+//							urlConnection.getOutputStream());
+//					writer.write("&client_id=" + mClientId + "&client_secret="
+//							+ mClientSecret + "&grant_type=authorization_code"
+//							+ "&redirect_uri=" + mCallbackUrl + "&code=" + newCode);
+//					writer.flush();
+//					String response = streamToString(urlConnection
+//							.getInputStream());
+//					Log.i(TAG, "response " + response);
+//					JSONObject jsonObj = (JSONObject) new JSONTokener(response)
+//							.nextValue();
+//
+//					mAccessToken = jsonObj.getString("access_token");
+//					// Log.i(TAG, "Got access token: " + mAccessToken);
+//
+//					String id = jsonObj.getJSONObject("user").getString("id");
+//					String user = jsonObj.getJSONObject("user").getString(
+//							"username");
+//					String name = jsonObj.getJSONObject("user").getString(
+//							"full_name");
+//					String userImage = jsonObj.getJSONObject("user").getString(
+//							"profile_picture");
+//					mSession.storeAccessToken(mAccessToken, id, user, name,
+//							userImage);
+//
+//				} catch (Exception ex) {
+//					what = WHAT_ERROR;
+//					ex.printStackTrace();
+//				}
+//
+//				mHandler.sendMessage(mHandler.obtainMessage(what, 1, 0));
+//			}
+//		}.start();
 	}
 
 	private void fetchUserName() {

@@ -23,8 +23,8 @@ public class InstagramDialog extends Dialog {
 	static final float[] DIMENSIONS_LANDSCAPE = { 460, 260 };
 	static final float[] DIMENSIONS_PORTRAIT = { 420, 420 };
 	static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(
-			ViewGroup.LayoutParams.WRAP_CONTENT,
-			ViewGroup.LayoutParams.WRAP_CONTENT);
+			ViewGroup.LayoutParams.MATCH_PARENT,
+			ViewGroup.LayoutParams.MATCH_PARENT);
 	static final int MARGIN = 4;
 	static final int PADDING = 2;
 
