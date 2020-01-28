@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Crashlytics.getInstance().crash();
+		//Crashlytics.getInstance().crash();
 		setContentView(R.layout.activity_main);
 		//TODO Create and move this into Main Applcation
 		Fresco.initialize(this);
