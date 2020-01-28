@@ -7,7 +7,7 @@ public class AccessToken {
 
 	@SerializedName("access_token")
 	@Expose
-	public String access_token;
+	public String accessToken;
 
 	@SerializedName("user_id")
 	@Expose
@@ -22,12 +22,12 @@ public class AccessToken {
 	}
 
 
-	public String getAccess_token() {
-		return access_token;
+	public String getAccessToken() {
+		return accessToken;
 	}
 
-	public void setAccess_token(String access_token) {
-		this.access_token = access_token;
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
 	}
 
 

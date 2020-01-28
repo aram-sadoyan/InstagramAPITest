@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.ViewGroup;
@@ -57,14 +58,20 @@ public class InstagramDialog extends Dialog {
 		setUpTitle();
 		setUpWebView();
 
+		//todo fix dialog sizes
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		getWindow().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		int height = displayMetrics.heightPixels;
+		int width = displayMetrics.widthPixels;
+
 		Display display = getWindow().getWindowManager().getDefaultDisplay();
 		final float scale = getContext().getResources().getDisplayMetrics().density;
 		float[] dimensions = (display.getWidth() < display.getHeight()) ? DIMENSIONS_PORTRAIT
 				: DIMENSIONS_LANDSCAPE;
 
+		//todo set right wight height
 		addContentView(mContent, new FrameLayout.LayoutParams(
-				(int) (dimensions[0] * scale + 0.5f), (int) (dimensions[1]
-				* scale + 0.5f)));
+				1000, 1600));
 		CookieSyncManager.createInstance(getContext());
 		CookieManager cookieManager = CookieManager.getInstance();
 		cookieManager.removeAllCookie();
@@ -140,7 +147,6 @@ public class InstagramDialog extends Dialog {
 
 	public interface OAuthDialogListener {
 		public abstract void onComplete(String accessToken);
-
 		public abstract void onError(String error);
 	}
 

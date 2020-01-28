@@ -6,25 +6,49 @@ import java.io.Serializable;
 
 public class InstagramUser implements Serializable {
 
-	@SerializedName("access_token")
-	private String accesToken;
+	@SerializedName("id")
+	private String id;
 
-	@SerializedName("user")
-	private User user;
+	@SerializedName("username")
+	private String userName;
 
-	public String getAccesToken() {
-		return accesToken;
+	@SerializedName("media_count")
+	private int mediaCount;
+
+	@SerializedName("media")
+	private InstagramMedia instagramMedia;
+
+	public String getId() {
+		return id;
 	}
 
-	public void setAccesToken(String accesToken) {
-		this.accesToken = accesToken;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public User getUser() {
-		return user;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setUser(User user) {
-		this.user = user;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
+
+	public int getMediaCount() {
+		return mediaCount;
+	}
+
+	public void setMediaCount(int mediaCount) {
+		this.mediaCount = mediaCount;
+	}
+
+	public InstagramMedia getInstagramMedia() {
+		return instagramMedia;
+	}
+
+	public void setInstagramMedia(InstagramMedia instagramMedia) {
+		this.instagramMedia = instagramMedia;
+	}
+
+
 }

@@ -2,38 +2,24 @@ package com.pr.instagramapitest.instaFiles;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
-
 import com.pr.instagramapitest.api.AccessToken;
-import com.pr.instagramapitest.api.InstagramUser;
+import com.pr.instagramapitest.api.LongLiveAccesToken;
 import com.pr.instagramapitest.api.RestClient;
-
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class InstagramApp {
 
-	private InstagramSession mSession;
-	private InstagramDialog mDialog;
+	private InstagramSession instaSession;
+	private InstagramDialog instDialog;
 	private OAuthAuthenticationListener mListener;
 	private ProgressDialog mProgress;
-	private String mAuthUrl;
-	private String mTokenUrl;
 	private String mAccessToken;
 	private Context mCtx;
 
@@ -52,10 +38,7 @@ public class InstagramApp {
 	public static String mCallbackUrl = "";
 	private static final String AUTH_URL = "https://api.instagram.com/oauth/authorize/";
 	private static final String TOKEN_URL = "https://api.instagram.com/oauth/access_token";
-	private static final String TOKEN_URL_NEW = "https://api.instagram.com/oauth/access_token";
-	private static final String TOKEN_URL_NEW2 = "https://api.instagram.com/";
 	private static final String API_URL = "https://api.instagram.com/v1";
-	private static final String ACCESS_TOKEN = "IGQVJXM19jS1NuV0dKMWM5M3ZA5THNVb1kwU0pySHFObGtXZAmpqSjVKOU9CUlZAsRzFBNjYxR2NSdTdKOWdZATHBxNmpkWno3dTZAHOUlvcHUyQW02MEtaNVhrU2pQajZAZAZAlVaUnhNSDVNSnhpNTREX0V3MHRqcjNFWHJyWkpF";
 
 	private static final String TAG = "InstagramAPI";
 
@@ -65,13 +48,11 @@ public class InstagramApp {
 		mClientId = clientId;
 		mClientSecret = clientSecret;
 		mCtx = context;
-		mSession = new InstagramSession(context);
-		mAccessToken = mSession.getAccessToken();
+		instaSession = new InstagramSession(context);
+		mAccessToken = instaSession.getAccessToken();
 		mCallbackUrl = callbackUrl;
-		mTokenUrl = TOKEN_URL + "?client_id=" + clientId + "&client_secret="
-				+ clientSecret + "&redirect_uri=" + mCallbackUrl
-				+ "&grant_type=authorization_code";
-		mAuthUrl = AUTH_URL
+
+		String mAuthUrl = AUTH_URL
 				+ "?client_id="
 				+ clientId
 				+ "&redirect_uri="
@@ -92,191 +73,135 @@ public class InstagramApp {
 			}
 		};
 
-		mDialog = new InstagramDialog(context, mAuthUrl, listener);
+		instDialog = new InstagramDialog(context, mAuthUrl, listener);
 		mProgress = new ProgressDialog(context);
 		mProgress.setCancelable(false);
 	}
 
 	private void getAccessToken(final String code) {
-		String newdCode = code.replace("#_", "");
+		String newCode = code.replace("#_", "");
 
-		String mTokenUrl = TOKEN_URL_NEW + "?client_id=" + mClientId + "&client_secret="
-				+ mClientSecret + "&redirect_uri=" + mCallbackUrl
-				+ "&grant_type=authorization_code"+"&code=" +newdCode ;
+		mProgress.setMessage("Getting access token ...");
+		mProgress.show();
 
+		Log.d("dwd", "Getting access token");
 		RestClient.getInstance(mCtx).getWatchApiService().proceedLogin2(
 				mClientId,
 				mClientSecret,
 				"authorization_code",
 				mCallbackUrl,
-				newdCode
+				newCode
 		).enqueue(new Callback<AccessToken>() {
 			@Override
 			public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-				Log.d("dwd", "Retrofit get Token Succes");
+				AccessToken accessToken = response.body();
+				if (accessToken != null) {
+					getLongLiveAccessToken(accessToken.getAccessToken(), accessToken.getUserId());
+				} else {
+					instDialog.dismiss();
+					mListener.onFail("boddy is null");
+				}
 			}
 
 			@Override
 			public void onFailure(Call<AccessToken> call, Throwable t) {
-				Log.d("dwd", "Error Retrofit get Token");
-
+				instDialog.dismiss();
+				mListener.onFail("boddy is null");
 			}
 		});
-
-
-//		mProgress.setMessage("Getting access token ...");
-//		mProgress.show();
-//
-//		new Thread() {
-//			@Override
-//			public void run() {
-//				Log.i(TAG, "Getting access token");
-//				int what = WHAT_FETCH_INFO;
-//				try {
-//					URL url = new URL(TOKEN_URL);
-//					// URL url = new URL(mTokenUrl + "&code=" + code);
-//					Log.i(TAG, "Opening Token URL " + url.toString());
-//					HttpURLConnection urlConnection = (HttpURLConnection) url
-//							.openConnection();
-//					urlConnection.setRequestMethod("POST");
-//					urlConnection.setDoInput(true);
-//					urlConnection.setDoOutput(true);
-//					 urlConnection.connect();
-//					 String newCode = code.replace("#_","");
-//					 //code = code.replaceAll("#_ ","");
-//					OutputStreamWriter writer = new OutputStreamWriter(
-//							urlConnection.getOutputStream());
-//					writer.write("&client_id=" + mClientId + "&client_secret="
-//							+ mClientSecret + "&grant_type=authorization_code"
-//							+ "&redirect_uri=" + mCallbackUrl + "&code=" + newCode);
-//					writer.flush();
-//					String response = streamToString(urlConnection
-//							.getInputStream());
-//					Log.i(TAG, "response " + response);
-//					JSONObject jsonObj = (JSONObject) new JSONTokener(response)
-//							.nextValue();
-//
-//					mAccessToken = jsonObj.getString("access_token");
-//					// Log.i(TAG, "Got access token: " + mAccessToken);
-//
-//					String id = jsonObj.getJSONObject("user").getString("id");
-//					String user = jsonObj.getJSONObject("user").getString(
-//							"username");
-//					String name = jsonObj.getJSONObject("user").getString(
-//							"full_name");
-//					String userImage = jsonObj.getJSONObject("user").getString(
-//							"profile_picture");
-//					mSession.storeAccessToken(mAccessToken, id, user, name,
-//							userImage);
-//
-//				} catch (Exception ex) {
-//					what = WHAT_ERROR;
-//					ex.printStackTrace();
-//				}
-//
-//				mHandler.sendMessage(mHandler.obtainMessage(what, 1, 0));
-//			}
-//		}.start();
 	}
 
-	private void fetchUserName() {
-		mProgress.setMessage("Finalizing ...");
-
-		new Thread() {
+	private void getLongLiveAccessToken(String shortLiveAccessToken, long userId) {
+		String url = "https://graph.instagram.com/access_token?grant_type=ig_exchange_token"
+				+ "&client_secret="+mClientSecret
+				+ "&access_token="+shortLiveAccessToken;
+		RestClient.getInstance(mCtx).getWatchApiService().getLongLiveAccesToken(url).enqueue(new Callback<LongLiveAccesToken>() {
 			@Override
-			public void run() {
-				Log.i(TAG, "Fetching user info");
-				int what = WHAT_FINALIZE;
-				try {
-					URL url = new URL(API_URL + "/users/" + mSession.getId()
-							+ "/?access_token=" + mAccessToken);
-					Log.d(TAG, "Opening URL " + url.toString());
-					HttpURLConnection urlConnection = (HttpURLConnection) url
-							.openConnection();
-					urlConnection.setRequestMethod("GET");
-					urlConnection.setDoInput(true);
-					urlConnection.setDoOutput(true);
-					urlConnection.connect();
-					String response = streamToString(urlConnection
-							.getInputStream());
-					System.out.println(response);
-					JSONObject jsonObj = (JSONObject) new JSONTokener(response)
-							.nextValue();
-					String name = jsonObj.getJSONObject("data").getString(
-							"full_name");
-					// String bio =
-					// jsonObj.getJSONObject("data").getString("bio");
-					Log.i(TAG, "Got name: " + name);
-				} catch (Exception ex) {
-					what = WHAT_ERROR;
-					ex.printStackTrace();
+			public void onResponse(Call<LongLiveAccesToken> call, Response<LongLiveAccesToken> response) {
+				Log.d("dwd","succes Long Live id");
+				LongLiveAccesToken longLiveAccesToken = response.body();
+				if (longLiveAccesToken != null) {
+					instaSession.storeAccessToken(
+							longLiveAccesToken.getLonLiveAcToken(),
+							"someId",
+							String.valueOf(userId),
+							"Kj",
+							"img");
+
+					mListener.onSuccess();
+				} else {
+					mListener.onFail("boddy is null");
 				}
-
-				mHandler.sendMessage(mHandler.obtainMessage(what, 2, 0));
+				instDialog.dismiss();
 			}
-		}.start();
 
+			@Override
+			public void onFailure(Call<LongLiveAccesToken> call, Throwable t) {
+				instDialog.dismiss();
+				mListener.onFail("retrofit error");
+			}
+		});
 	}
 
-	private Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			if (msg.what == WHAT_ERROR) {
-				mProgress.dismiss();
-				if (msg.arg1 == 1) {
-					mListener.onFail("Failed to get access token");
-				} else if (msg.arg1 == 2) {
-					mListener.onFail("Failed to get user information");
-				}
-			} else if (msg.what == WHAT_FETCH_INFO) {
-				mProgress.dismiss();
-				mListener.onSuccess();
-				// fetchUserName();
-			} else {
-				// mProgress.dismiss();
-				// mListener.onSuccess();
-			}
-		}
-	};
+//	private Handler mHandler = new Handler() {
+//		@Override
+//		public void handleMessage(Message msg) {
+//			if (msg.what == WHAT_ERROR) {
+//				mProgress.dismiss();
+//				if (msg.arg1 == 1) {
+//					mListener.onFail("Failed to get access token");
+//				} else if (msg.arg1 == 2) {
+//					mListener.onFail("Failed to get user information");
+//				}
+//			} else if (msg.what == WHAT_FETCH_INFO) {
+//				mProgress.dismiss();
+//				mListener.onSuccess();
+//				// fetchUserName();
+//			} else {
+//				// mProgress.dismiss();
+//				// mListener.onSuccess();
+//			}
+//		}
+//	};
 
-	public boolean hasAccessToken() {
-		return (mAccessToken == null) ? false : true;
-	}
+//	public boolean hasAccessToken() {
+//		return (mAccessToken == null) ? false : true;
+//	}
 
 	public void setListener(OAuthAuthenticationListener listener) {
 		mListener = listener;
 	}
 
 	// getting username
-	public String getUserName() {
-		return mSession.getUsername();
+	public String getUserId() {
+		return instaSession.getUserId();
 	}
 
 	// getting user id
 	public String getId() {
-		return mSession.getId();
+		return instaSession.getId();
 	}
 
 	// getting username
 	public String getName() {
-		return mSession.getName();
+		return instaSession.getName();
 	}
 
 	// getting user image
 	public String getUserPicture() {
-		return mSession.getUserImage();
+		return instaSession.getUserImage();
 	}
 
 	// getting accesstoken
 	public String getAccessToken() {
-		return mSession.getAccessToken();
+		return instaSession.getAccessToken();
 	}
 
 	public void authorize() {
 		// Intent webAuthIntent = new Intent(Intent.ACTION_VIEW);
 		// webAuthIntent.setData(Uri.parse(AUTH_URL));
 		// mCtx.startActivity(webAuthIntent);
-		mDialog.show();
+		instDialog.show();
 	}
 
 	private String streamToString(InputStream is) throws IOException {
@@ -307,7 +232,7 @@ public class InstagramApp {
 
 	public void resetAccessToken() {
 		if (mAccessToken != null) {
-			mSession.resetAccessToken();
+			instaSession.resetAccessToken();
 			mAccessToken = null;
 		}
 	}

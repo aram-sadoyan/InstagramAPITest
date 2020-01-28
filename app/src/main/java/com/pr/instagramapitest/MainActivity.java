@@ -2,31 +2,30 @@ package com.pr.instagramapitest;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.pr.instagramapitest.api.Brand;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.pr.instagramapitest.activity.PostsActivity;
+import com.pr.instagramapitest.api.InstagramUser;
 import com.pr.instagramapitest.api.RestClient;
-import com.pr.instagramapitest.api.User;
 import com.pr.instagramapitest.instaFiles.InstagramApp;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainActivity extends AppCompatActivity {
+import static com.pr.instagramapitest.util.AppConstants.EXTRA_KEY_INSTAGRAM_USER;
 
+public class MainActivity extends AppCompatActivity {
 
 	private InstagramApp instaObj;
 	public static final String CLIENT_ID = "550625228857474";
 	public static final String CLIENT_SECRET = "67ba19ebb9e12c4228d07ef8b2058629";
 	public static final String CALLBACK_URL = "https://socialsizzle.heroku.com/auth/";
-
 
 	public Button loginBtn = null;
 
@@ -34,63 +33,82 @@ public class MainActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-
-//
-//		RestClient.getInstance(getApplicationContext()).getWatchApiService().getUsers().enqueue(new Callback<List<Brand>>() {
-//			@Override
-//			public void onResponse(Call<List<Brand>> call, Response<List<Brand>> response) {
-//				Log.d("dwd","edkojihefef");
-//
-//			}
-//
-//			@Override
-//			public void onFailure(Call<List<Brand>> call, Throwable t) {
-//				Log.d("dwd","error");
-//
-//			}
-//		});
+		//TODO Create and move this into Main Applcation
+		Fresco.initialize(this);
 
 		instaObj = new InstagramApp(this, CLIENT_ID,
 				CLIENT_SECRET, CALLBACK_URL);
 		instaObj.setListener(listener);
 
+		//TODO GET INSTA USER PROFILE
+		String currentAccesToken = instaObj.getAccessToken();
+		String userId = instaObj.getUserId();
 
+		String userDataBAseUrl = "https://graph.instagram.com/" + userId
+				+ "?fields=media,media_count,username"
+				+ "&access_token=" + currentAccesToken;
 
-
-		instaObj.authorize();
+		requestInstagramUser(userDataBAseUrl);
 
 		loginBtn = findViewById(R.id.btn_login);
 		//add this in your button click or wherever you need to call the instagram api
 
-		loginBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				instaObj = new InstagramApp(getApplicationContext(), CLIENT_ID,
-						CLIENT_SECRET, CALLBACK_URL);
-				instaObj.setListener(listener);
-
-
-				instaObj.authorize();
-			}
-		});
+//		loginBtn.setOnClickListener(v -> {
+//			instaObj = new InstagramApp(getApplicationContext(), CLIENT_ID,
+//					CLIENT_SECRET, CALLBACK_URL);
+//			instaObj.setListener(listener);
+//
+//			instaObj.authorize();
+//		});
 
 	}
 
-//	@Override
-//	public void onTokenReceived(String auth_token) {
-//
-//	}
+	private void requestInstagramUser(String userDataBAseUrl) {
+		RestClient.getInstance(getApplicationContext()).getWatchApiService()
+				.getInstagramUser(userDataBAseUrl).enqueue(new Callback<InstagramUser>() {
+			@Override
+			public void onResponse(Call<InstagramUser> call, Response<InstagramUser> response) {
+				InstagramUser instagramUser = response.body();
+				if (instagramUser != null) {
+					int mediaCount = instagramUser.getMediaCount();
+					if (mediaCount > 0) {
+						Intent postActivityIntent = new Intent(MainActivity.this, PostsActivity.class);
+						Bundle bundle = new Bundle();
+						bundle.putSerializable(EXTRA_KEY_INSTAGRAM_USER, instagramUser);
+						postActivityIntent.putExtra(EXTRA_KEY_INSTAGRAM_USER, instagramUser);
+
+						startActivity(postActivityIntent);
+					}
+				} else {
+					instaObj.authorize();
+				}
+			}
+
+			@Override
+			public void onFailure(Call<InstagramUser> call, Throwable t) {
+				Log.d("dwd", "InstaUser Error");
+				instaObj.authorize();
+			}
+		});
+	}
 
 
 	InstagramApp.OAuthAuthenticationListener listener = new InstagramApp.OAuthAuthenticationListener() {
 
 		@Override
 		public void onSuccess() {
-			Log.d("dwd", "succes  " + instaObj.getName() + " " + instaObj.getUserName());
+			String currentAccesToken = instaObj.getAccessToken();
+			String userId = instaObj.getUserId();
+
+			String userDataBAseUrl = "https://graph.instagram.com/" + userId
+					+ "?fields=media,media_count,username"
+					+ "&access_token=" + currentAccesToken;
+			requestInstagramUser(userDataBAseUrl);
+
+			Log.d("dwd", "succes  " + instaObj.getName() + " " + instaObj.getUserId());
 			Log.e("Userid", instaObj.getId());
 			Log.e("Name", instaObj.getName());
-			Log.e("UserName", instaObj.getUserName());
+			Log.e("UserId", instaObj.getUserId());
 
 		}
 
