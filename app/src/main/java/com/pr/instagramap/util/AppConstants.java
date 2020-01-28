@@ -1,4 +1,4 @@
-package com.pr.instagramapitest.util;
+package com.pr.instagramap.util;
 
 public class AppConstants {
 

@@ -1,4 +1,4 @@
-package com.pr.instagramapitest.api;
+package com.pr.instagramap.api;
 
 public class CharactersRemoteDataSource {
 }

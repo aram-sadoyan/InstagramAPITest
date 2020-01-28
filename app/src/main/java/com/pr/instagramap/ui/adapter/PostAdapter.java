@@ -1,4 +1,4 @@
-package com.pr.instagramapitest.ui.adapter;
+package com.pr.instagramap.ui.adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -11,12 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.pr.instagramap.api.InstagramMedia;
 import com.pr.instagramapitest.R;
-import com.pr.instagramapitest.activity.PostsActivity;
-import com.pr.instagramapitest.api.InstagramMedia;
-import com.pr.instagramapitest.api.InstagramPost;
-import com.pr.instagramapitest.api.InstagramUser;
-import com.pr.instagramapitest.api.RestClient;
+import com.pr.instagramap.activity.PostsActivity;
+import com.pr.instagramap.api.InstagramPost;
+import com.pr.instagramap.api.InstagramUser;
+import com.pr.instagramap.api.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;

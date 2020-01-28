@@ -1,4 +1,4 @@
-package com.pr.instagramapitest.activity;
+package com.pr.instagramap.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -6,19 +6,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.pr.instagramap.api.InstagramMedia;
+import com.pr.instagramap.api.InstagramPost;
+import com.pr.instagramap.api.InstagramUser;
+import com.pr.instagramap.api.RestClient;
+import com.pr.instagramap.ui.adapter.PostAdapter;
 import com.pr.instagramapitest.R;
-import com.pr.instagramapitest.api.InstagramMedia;
-import com.pr.instagramapitest.api.InstagramPost;
-import com.pr.instagramapitest.api.InstagramUser;
-import com.pr.instagramapitest.api.RestClient;
-import com.pr.instagramapitest.ui.adapter.PostAdapter;
-import com.pr.instagramapitest.util.AppConstants;
+import com.pr.instagramap.util.AppConstants;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -32,8 +31,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.pr.instagramapitest.util.AppConstants.API_ACCESS_TOKEN;
-import static com.pr.instagramapitest.util.AppConstants.SHARED;
+import static com.pr.instagramap.util.AppConstants.API_ACCESS_TOKEN;
+import static com.pr.instagramap.util.AppConstants.SHARED;
 
 public class PostsActivity extends AppCompatActivity {
 

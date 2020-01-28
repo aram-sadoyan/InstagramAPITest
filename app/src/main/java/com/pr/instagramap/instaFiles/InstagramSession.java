@@ -1,11 +1,11 @@
-package com.pr.instagramapitest.instaFiles;
+package com.pr.instagramap.instaFiles;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.pr.instagramapitest.util.AppConstants;
+import com.pr.instagramap.util.AppConstants;
 
-import static com.pr.instagramapitest.util.AppConstants.API_ACCESS_TOKEN;
+import static com.pr.instagramap.util.AppConstants.API_ACCESS_TOKEN;
 
 public class InstagramSession {
 	private SharedPreferences sharedPref;

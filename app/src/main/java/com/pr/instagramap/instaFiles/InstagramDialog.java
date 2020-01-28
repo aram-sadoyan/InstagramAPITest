@@ -1,4 +1,4 @@
-package com.pr.instagramapitest.instaFiles;
+package com.pr.instagramap.instaFiles;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;

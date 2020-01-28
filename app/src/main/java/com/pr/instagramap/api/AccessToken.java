@@ -1,4 +1,4 @@
-package com.pr.instagramapitest.api;
+package com.pr.instagramap.api;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

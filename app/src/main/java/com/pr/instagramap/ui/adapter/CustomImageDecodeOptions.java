@@ -1,4 +1,4 @@
-package com.pr.instagramapitest.ui.adapter;
+package com.pr.instagramap.ui.adapter;
 
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;

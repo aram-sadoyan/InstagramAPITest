@@ -1,4 +1,4 @@
-package com.pr.instagramapitest;
+package com.pr.instagramap;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,17 +8,18 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.pr.instagramapitest.activity.PostsActivity;
-import com.pr.instagramapitest.api.InstagramUser;
-import com.pr.instagramapitest.api.RestClient;
-import com.pr.instagramapitest.instaFiles.InstagramApp;
+import com.pr.instagramap.activity.PostsActivity;
+import com.pr.instagramap.api.InstagramUser;
+import com.pr.instagramap.api.RestClient;
+import com.pr.instagramap.instaFiles.InstagramApp;
+import com.pr.instagramap.util.AppConstants;
+import com.pr.instagramapitest.R;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static com.pr.instagramapitest.util.AppConstants.EXTRA_KEY_INSTAGRAM_USER;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Crashlytics.getInstance().crash();
 		setContentView(R.layout.activity_main);
 		//TODO Create and move this into Main Applcation
 		Fresco.initialize(this);
@@ -74,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
 					if (mediaCount > 0) {
 						Intent postActivityIntent = new Intent(MainActivity.this, PostsActivity.class);
 						Bundle bundle = new Bundle();
-						bundle.putSerializable(EXTRA_KEY_INSTAGRAM_USER, instagramUser);
-						postActivityIntent.putExtra(EXTRA_KEY_INSTAGRAM_USER, instagramUser);
+						bundle.putSerializable(AppConstants.EXTRA_KEY_INSTAGRAM_USER, instagramUser);
+						postActivityIntent.putExtra(AppConstants.EXTRA_KEY_INSTAGRAM_USER, instagramUser);
 
 						startActivity(postActivityIntent);
 					}

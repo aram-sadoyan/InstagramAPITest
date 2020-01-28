@@ -1,4 +1,4 @@
-package com.pr.instagramapitest.ui.adapter;
+package com.pr.instagramap.ui.adapter;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;

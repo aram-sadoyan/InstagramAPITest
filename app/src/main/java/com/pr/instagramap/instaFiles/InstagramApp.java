@@ -1,11 +1,13 @@
-package com.pr.instagramapitest.instaFiles;
+package com.pr.instagramap.instaFiles;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
-import com.pr.instagramapitest.api.AccessToken;
-import com.pr.instagramapitest.api.LongLiveAccesToken;
-import com.pr.instagramapitest.api.RestClient;
+
+import com.pr.instagramap.api.AccessToken;
+import com.pr.instagramap.api.LongLiveAccesToken;
+import com.pr.instagramap.api.RestClient;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
