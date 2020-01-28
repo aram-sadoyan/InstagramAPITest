@@ -1,21 +1,23 @@
-package com.pr.instagramapitest.instaFiles;
+package com.pr.instagramap.instaFiles;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.pr.instagramap.util.AppConstants;
+
+import static com.pr.instagramap.util.AppConstants.API_ACCESS_TOKEN;
 
 public class InstagramSession {
 	private SharedPreferences sharedPref;
 	private SharedPreferences.Editor editor;
 
-	private static final String SHARED = "Instagram_Preferences";
-	private static final String API_USERNAME = "username";
+	private static final String API_USER_ID = "userId";
 	private static final String API_ID = "id";
 	private static final String API_NAME = "name";
-	private static final String API_ACCESS_TOKEN = "access_token";
 	private static final String API_USER_IMAGE = "user_image";
 
 	public InstagramSession(Context context) {
-		sharedPref = context.getSharedPreferences(SHARED, Context.MODE_PRIVATE);
+		sharedPref = context.getSharedPreferences(AppConstants.SHARED, Context.MODE_PRIVATE);
 		editor = sharedPref.edit();
 	}
 
@@ -27,11 +29,11 @@ public class InstagramSession {
 //	 * @param username
 //	 */
 	public void storeAccessToken(String accessToken, String id,
-								 String username, String name, String image) {
+								 String userId, String name, String image) {
 		editor.putString(API_ID, id);
 		editor.putString(API_NAME, name);
 		editor.putString(API_ACCESS_TOKEN, accessToken);
-		editor.putString(API_USERNAME, username);
+		editor.putString(API_USER_ID, userId);
 		editor.putString(API_USER_IMAGE, image);
 		editor.commit();
 	}
@@ -48,7 +50,7 @@ public class InstagramSession {
 		editor.putString(API_ID, null);
 		editor.putString(API_NAME, null);
 		editor.putString(API_ACCESS_TOKEN, null);
-		editor.putString(API_USERNAME, null);
+		editor.putString(API_USER_ID, null);
 		editor.putString(API_USER_IMAGE, null);
 		editor.commit();
 	}
@@ -58,8 +60,8 @@ public class InstagramSession {
 	 *
 	 * @return User name
 	 */
-	public String getUsername() {
-		return sharedPref.getString(API_USERNAME, null);
+	public String getUserId() {
+		return sharedPref.getString(API_USER_ID, null);
 	}
 
 	/**
