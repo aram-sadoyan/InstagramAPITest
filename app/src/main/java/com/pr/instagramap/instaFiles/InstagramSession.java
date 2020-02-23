@@ -2,7 +2,6 @@ package com.pr.instagramap.instaFiles;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-
 import com.pr.instagramap.util.AppConstants;
 
 import static com.pr.instagramap.util.AppConstants.API_ACCESS_TOKEN;
@@ -61,7 +60,7 @@ public class InstagramSession {
 	 * @return User name
 	 */
 	public String getUserId() {
-		return sharedPref.getString(API_USER_ID, null);
+		return sharedPref.getString(API_USER_ID, "");
 	}
 
 	/**
@@ -86,7 +85,7 @@ public class InstagramSession {
 	 * @return Access token
 	 */
 	public String getAccessToken() {
-		return sharedPref.getString(API_ACCESS_TOKEN, null);
+		return sharedPref.getString(API_ACCESS_TOKEN, "");
 	}
 
 	/**

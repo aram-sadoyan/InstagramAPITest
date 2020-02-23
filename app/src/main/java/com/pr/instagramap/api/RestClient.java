@@ -23,7 +23,7 @@ public class RestClient {
 	public static final int CACHE_SIZE = 10 * 1024 * 1024;
 
 
-	private WatchApiService watchApiService;
+	private InstaApiService watchApiService;
 
 	public static final String TEST_BASE_URL = "https://api.instagram.com/";
 
@@ -58,7 +58,7 @@ public class RestClient {
 				.client(okHttpClient)
 				.build();
 
-		watchApiService = retrofit.create(WatchApiService.class);
+		watchApiService = retrofit.create(InstaApiService.class);
 
 	}
 
@@ -90,7 +90,7 @@ public class RestClient {
 		return thisInstance;
 	}
 
-	public WatchApiService getWatchApiService() {
+	public InstaApiService getInstaApiService() {
 		return watchApiService;
 	}
 

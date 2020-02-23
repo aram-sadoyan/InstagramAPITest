@@ -66,11 +66,13 @@ public class InstagramApp {
 		InstagramDialog.OAuthDialogListener listener = new InstagramDialog.OAuthDialogListener() {
 			@Override
 			public void onComplete(String code) {
+				Log.d("dwd2","get short Acces token SUCCESS");
 				getAccessToken(code);
 			}
 
 			@Override
 			public void onError(String error) {
+				Log.d("dwd2","get short Acces token FAILED");
 				mListener.onFail("Authorization failed");
 			}
 		};
@@ -82,12 +84,13 @@ public class InstagramApp {
 
 	private void getAccessToken(final String code) {
 		String newCode = code.replace("#_", "");
-
-		mProgress.setMessage("Getting access token ...");
-		mProgress.show();
-
 		Log.d("dwd", "Getting access token");
-		RestClient.getInstance(mCtx).getWatchApiService().proceedLogin2(
+		if (mProgress != null){
+			mProgress.setMessage("Getting access token ...");
+			mProgress.show();
+		}
+
+		RestClient.getInstance(mCtx).getInstaApiService().proceedLogin2(
 				mClientId,
 				mClientSecret,
 				"authorization_code",
@@ -98,8 +101,10 @@ public class InstagramApp {
 			public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
 				AccessToken accessToken = response.body();
 				if (accessToken != null) {
+					Log.d("dwd2","getShortLiveAccessToken SUCCESS");
 					getLongLiveAccessToken(accessToken.getAccessToken(), accessToken.getUserId());
 				} else {
+					Log.d("dwd2","getShortLiveAccessToken boddy is null FAIL");
 					instDialog.dismiss();
 					mListener.onFail("boddy is null");
 				}
@@ -108,6 +113,7 @@ public class InstagramApp {
 			@Override
 			public void onFailure(Call<AccessToken> call, Throwable t) {
 				instDialog.dismiss();
+				Log.d("dwd2","getShortLiveAccessToken FAIL");
 				mListener.onFail("boddy is null");
 			}
 		});
@@ -117,10 +123,10 @@ public class InstagramApp {
 		String url = "https://graph.instagram.com/access_token?grant_type=ig_exchange_token"
 				+ "&client_secret="+mClientSecret
 				+ "&access_token="+shortLiveAccessToken;
-		RestClient.getInstance(mCtx).getWatchApiService().getLongLiveAccesToken(url).enqueue(new Callback<LongLiveAccesToken>() {
+		RestClient.getInstance(mCtx).getInstaApiService().getLongLiveAccesToken(url).enqueue(new Callback<LongLiveAccesToken>() {
 			@Override
 			public void onResponse(Call<LongLiveAccesToken> call, Response<LongLiveAccesToken> response) {
-				Log.d("dwd","succes Long Live id");
+				Log.d("dwd2","getLongLiveAccessToken SUCCESS");
 				LongLiveAccesToken longLiveAccesToken = response.body();
 				if (longLiveAccesToken != null) {
 					instaSession.storeAccessToken(
@@ -132,6 +138,8 @@ public class InstagramApp {
 
 					mListener.onSuccess();
 				} else {
+					Log.d("dwd2","getLongLiveAccessToken EMPTY FAIL");
+
 					mListener.onFail("boddy is null");
 				}
 				instDialog.dismiss();
@@ -140,6 +148,8 @@ public class InstagramApp {
 			@Override
 			public void onFailure(Call<LongLiveAccesToken> call, Throwable t) {
 				instDialog.dismiss();
+				Log.d("instagram app","getLongLiveAccessToken EMPTY FAIL");
+
 				mListener.onFail("retrofit error");
 			}
 		});

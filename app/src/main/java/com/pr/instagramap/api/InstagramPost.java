@@ -6,12 +6,6 @@ import java.io.Serializable;
 
 public class InstagramPost implements Serializable {
 
-//	 "id": "17895695668004550",
-////			 "media_type": "IMAGE",
-////			 "media_url": "https://fb-s-b-a.akamaihd.net/...",
-////			 "username": "jayposiris"
-////			 "timestamp": "2017-08-31T18:10:00+0000"
-
 	@SerializedName("id")
 	private String id;
 
@@ -32,6 +26,9 @@ public class InstagramPost implements Serializable {
 
 	@SerializedName("caption")
 	private String captionTxt;
+
+	@SerializedName("thumbnail_url")
+	private String thumbnailUrl;
 
 	public String getCaptionTxt() {
 		return captionTxt;
@@ -87,5 +84,13 @@ public class InstagramPost implements Serializable {
 
 	public void setPermaLink(String permaLink) {
 		this.permaLink = permaLink;
+	}
+
+	public String getThumbnailUrl() {
+		return thumbnailUrl;
+	}
+
+	public void setThumbnailUrl(String thumbnailUrl) {
+		this.thumbnailUrl = thumbnailUrl;
 	}
 }

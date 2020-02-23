@@ -4,10 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class LongLiveAccesToken {
 
-//	 "access_token":"{long-lived-user-access-token}",
-//			 "token_type": "bearer",
-//			 "expires_in": 5183944
-
 	@SerializedName("access_token")
 	private String lonLiveAcToken;
 

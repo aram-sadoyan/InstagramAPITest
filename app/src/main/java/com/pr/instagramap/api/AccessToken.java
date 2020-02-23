@@ -7,11 +7,11 @@ public class AccessToken {
 
 	@SerializedName("access_token")
 	@Expose
-	public String accessToken;
+	private String accessToken;
 
 	@SerializedName("user_id")
 	@Expose
-	public long userId;
+	private long userId;
 
 	public long getUserId() {
 		return userId;

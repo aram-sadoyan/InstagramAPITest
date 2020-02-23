@@ -3,7 +3,16 @@
 
 	<string name="facebook_app_id">705579043306365</string>
 
-	<string name="client_id">705579043306365</string>
-	<string name="callback_url">https://instagram.com/</string>
+	<string name="client_id">550625228857474</string>
+	<string name="client_secret">67ba19ebb9e12c4228d07ef8b2058629</string>
+	<string name="callback_url">https://socialsizzle.heroku.com/auth/</string>
+
 	<string name="base_url">https://api.instagram.com/</string>
+
+
+	<string name="lorem">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vehicula sem a malesuada rhoncus. Pellentesque ut dolor a dui porttitor porta lacinia non libero. Nunc volutpat arcu quis quam convallis molestie. Etiam ac tristique sem, id commodo justo. Phasellus congue tincidunt lectus, at dignissim ligula maximus eu. Quisque interdum nunc eget tellus bibendum suscipit. Phasellus feugiat ultricies posuere. Nullam porta accumsan velit, ut rutrum massa fermentum eu. Nunc ac bibendum nunc. Mauris eu ultricies ipsum. Ut id dolor dui. Pellentesque dictum dui vel tempus maximus. Vivamus non nisi quis libero sceleriesque ut dolor a dui porttitor porta lacinia non libero. Nunc volutpat arcu quis quam convallis molestie. sque pesque ut dolor a dui porttitor porta lacinia non libero. Nunc volutpat arcu quis quam convallis molestie. retiumesque ut dolor a dui porttitor porta lacinia non libero. Nunc volutpat arcu quis quam convallis molestie. . Ut eu tristique justo. Sed pellentesque placerat quam, ut ultricies turpis feugiat a. Aliquam a volutpat risus.
+    </string>
+
+
 </resources>

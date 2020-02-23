@@ -6,10 +6,13 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-	@SerializedName("id")
+	@SerializedName("status")
+	private String status;
+
+	@SerializedName("Id")
 	private String id;
 
-	@SerializedName("username")
+	@SerializedName("userName")
 	private String userName;
 
 	@SerializedName("access_token")
@@ -18,9 +21,8 @@ public class User implements Serializable {
 	@SerializedName("full_name")
 	private String fullName;
 
-//	@SerializedName("access_token")
-//	private String accesToken;
-
+	@SerializedName("coinsCount")
+	private String coins;
 
 	public String getId() {
 		return id;
@@ -32,10 +34,6 @@ public class User implements Serializable {
 
 	public String getUserName() {
 		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 
 	public String getAccesToken() {
@@ -52,5 +50,22 @@ public class User implements Serializable {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public String getCoins() {
+		return coins;
+	}
+
+	public void setCoins(String coins) {
+		this.coins = coins;
+	}
+
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }
